@@ -18,12 +18,25 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+def get_env_config():
+    config = {}
+    env_file = os.path.join(BASE_DIR, '.env')
+    if os.path.exists(env_file):
+        with open(env_file, 'r') as file:
+            for line in file:
+                key, value = line.split(sep=' = ')
+                config[key] = value.replace('\n', '')
+    else:
+        config['SECRET_KEY'] = ''
+        config['DEBUG'] = ''
+    return config
 
+env_config = get_env_config()
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '#43h@w(awhj6e0&pcx!o$3az5h3#pu06pz_d-dnk@jmmp78(#4'
+SECRET_KEY = os.environ.get('SECRET_KEY', env_config['SECRET_KEY'])
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get('DEBUG', env_config['DEBUG']))
 
 ALLOWED_HOSTS = []
 
