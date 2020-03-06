@@ -6,12 +6,13 @@ from . import serializers
 
 class FriendViewset(viewsets.ModelViewSet):
     queryset = models.Friend.objects.none()
+    #queryset = models.Friend.objects.with_overdue()
     serializer_class = serializers.FriendSerializer
     permission_classes = [IsOwner]
 
     def get_queryset(self):
         user = self.request.user
-        return models.Friend.objects.filter(owner=user)
+        return models.Friend.objects.filter(owner=user).with_overdue()
 
 
 class BelongingViewset(viewsets.ModelViewSet):
