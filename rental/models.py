@@ -37,9 +37,15 @@ class Friend(OwnedModel):
             returned__isnull=True, when=datetools.datesub_month(2)
             ).exists()
 
+    def __str__(self):
+        return self.name
+
 
 class Belonging(OwnedModel):
     name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 
 class Borrowed(OwnedModel):
@@ -47,3 +53,6 @@ class Borrowed(OwnedModel):
     to_who = models.ForeignKey(Friend, on_delete=models.CASCADE)
     when = models.DateTimeField(auto_now_add=True)
     returned = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.what} to {self.to_who}'

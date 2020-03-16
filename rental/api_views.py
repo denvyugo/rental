@@ -1,3 +1,4 @@
+import django_filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
 from .permissions import IsOwner
@@ -28,10 +29,25 @@ class BelongingViewset(viewsets.ModelViewSet):
         return models.Belonging.objects.filter(owner=user)
 
 
+class BorrowedFilterSet(django_filters.FilterSet):
+    missing = django_filters.BooleanFilter(field_name='returned', lookup_expr='isnull')
+    overdue = django_filters.BooleanFilter(field_name='returned', method='get_overdue')
+
+    class Meta:
+        model = models.Borrowed
+        fields = ['what', 'to_who', 'missing', 'overdue']
+
+    def get_overdue(self, queryset, field_name, value):
+        if value:
+            return queryset.overdue()
+        return queryset
+
+
 class BorrowedViewset(viewsets.ModelViewSet):
     queryset = models.Borrowed.objects.none()
     serializer_class = serializers.BorrowedSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+    filterset_class = BorrowedFilterSet
 
     def get_queryset(self):
         user = self.request.user
