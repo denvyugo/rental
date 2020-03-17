@@ -1,13 +1,14 @@
 import django_filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
+from rest_framework_extensions.mixins import NestedViewSetMixin
 from .permissions import IsOwner
 from . import models
 from . import pagination
 from . import serializers
 
 
-class FriendViewset(viewsets.ModelViewSet):
+class FriendViewset(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = models.Friend.objects.none()
     #queryset = models.Friend.objects.with_overdue()
     pagination_class = pagination.FriendPageNumberPagination
@@ -43,7 +44,7 @@ class BorrowedFilterSet(django_filters.FilterSet):
         return queryset
 
 
-class BorrowedViewset(viewsets.ModelViewSet):
+class BorrowedViewset(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = models.Borrowed.objects.none()
     serializer_class = serializers.BorrowedSerializer
     permission_classes = [IsAuthenticated, IsOwner]
