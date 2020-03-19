@@ -1,5 +1,5 @@
 from rest_framework import routers
-from rest_framework.extensions.routers import NestedRouterMixin
+from rest_framework_extensions.routers import NestedRouterMixin
 from . import api_views
 
 
@@ -7,7 +7,7 @@ class NestedDefaultRouter(NestedRouterMixin, routers.DefaultRouter):
     pass
 
 
-router = routers.NestedDefaultRouter()
+router = NestedDefaultRouter()
 friends = router.register(r'friends', api_views.FriendViewset)
 friends.register(
     r'borrowings',
