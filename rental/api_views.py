@@ -10,8 +10,8 @@ from . import serializers
 
 class FriendViewset(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = models.Friend.objects.none()
-    #queryset = models.Friend.objects.with_overdue()
-    pagination_class = pagination.FriendPageNumberPagination
+    # queryset = models.Friend.objects.with_overdue()
+    pagination_class = pagination.HeaderLimitOffsetPagination
     serializer_class = serializers.FriendSerializer
     permission_classes = [IsAuthenticated, IsOwner]
 
@@ -22,6 +22,7 @@ class FriendViewset(NestedViewSetMixin, viewsets.ModelViewSet):
 
 class BelongingViewset(viewsets.ModelViewSet):
     queryset = models.Belonging.objects.none()
+    pagination_class = pagination.HeaderLimitOffsetPagination
     serializer_class = serializers.BelongingSerializer
     permission_classes = [IsAuthenticated, IsOwner]
 

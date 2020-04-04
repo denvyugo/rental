@@ -34,7 +34,7 @@ class Friend(OwnedModel):
         if hasattr(self, 'ann_overdue'):
             return self.ann_overdue
         return self.borrowed_set.filter(
-            returned__isnull=True, when=datetools.datesub_month(2)
+            returned__isnull=True, when__lte=datetools.datesub_month(2)
             ).exists()
 
     def __str__(self):
@@ -48,11 +48,18 @@ class Belonging(OwnedModel):
         return self.name
 
 
+class BorrowedQuerySet(models.QuerySet):
+    def overdue(self):
+        return self.filter(whel__lte=datetools.datesub_month(2))
+
+
 class Borrowed(OwnedModel):
     what = models.ForeignKey(Belonging, on_delete=models.CASCADE)
     to_who = models.ForeignKey(Friend, on_delete=models.CASCADE)
     when = models.DateTimeField(auto_now_add=True)
     returned = models.DateTimeField(null=True, blank=True)
+
+    objects = BorrowedQuerySet.as_manager()
 
     def __str__(self):
         return f'{self.what} to {self.to_who}'
