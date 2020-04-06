@@ -28,7 +28,7 @@ class BelongingViewset(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return models.Belonging.objects.filter(owner=user)
+        return models.Belonging.objects.filter(owner=user).with_borrowed()
 
 
 class BorrowedFilterSet(django_filters.FilterSet):

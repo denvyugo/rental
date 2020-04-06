@@ -41,8 +41,31 @@ class Friend(OwnedModel):
         return self.name
 
 
+class BelongingQuerySet(models.QuerySet):
+    def with_borrowed(self):
+        return self.annotate(
+            ann_borrowed=models.Case(
+                models.When(
+                    borrowed__returned__isnull=True,
+                    borrowed__to_who__isnull=False,
+                    then=True),
+                default=models.Value(False),
+                output_field=models.BooleanField()
+            )
+        )
+
+
 class Belonging(OwnedModel):
     name = models.CharField(max_length=100)
+
+    objects = BelongingQuerySet.as_manager()
+
+    @property
+    def is_borrowed(self):
+        if hasattr(self, 'ann_borrowed'):
+            return self.ann_borrowed
+        return self.borrowed_set.filter(
+            returned__isnull=True, to_who__isnull=False).exists()
 
     def __str__(self):
         return self.name

@@ -18,7 +18,7 @@ class BelongingSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = models.Belonging
-        fields = ('id', 'name', 'owner')
+        fields = ('id', 'name', 'is_borrowed', 'owner')
 
 
 class BorrowedSerializer(serializers.ModelSerializer):
