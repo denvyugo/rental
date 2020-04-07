@@ -79,7 +79,7 @@ class BorrowedQuerySet(models.QuerySet):
 class Borrowed(OwnedModel):
     what = models.ForeignKey(Belonging, on_delete=models.CASCADE)
     to_who = models.ForeignKey(Friend, on_delete=models.CASCADE)
-    when = models.DateTimeField(auto_now_add=True)
+    when = models.DateTimeField()
     returned = models.DateTimeField(null=True, blank=True)
 
     objects = BorrowedQuerySet.as_manager()
