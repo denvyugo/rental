@@ -73,7 +73,7 @@ class Belonging(OwnedModel):
 
 class BorrowedQuerySet(models.QuerySet):
     def overdue(self):
-        return self.filter(whel__lte=datetools.datesub_month(2))
+        return self.filter(when__lte=datetools.datesub_month(2))
 
 
 class Borrowed(OwnedModel):

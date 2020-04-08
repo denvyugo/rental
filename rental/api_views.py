@@ -33,7 +33,7 @@ class BelongingViewset(viewsets.ModelViewSet):
 
 class BorrowedFilterSet(django_filters.FilterSet):
     missing = django_filters.BooleanFilter(field_name='returned', lookup_expr='isnull')
-    overdue = django_filters.BooleanFilter(field_name='returned', method='get_overdue')
+    overdue = django_filters.BooleanFilter(method='get_overdue', field_name='returned')
 
     class Meta:
         model = models.Borrowed
