@@ -45,7 +45,13 @@ class BorrowedFilterSet(django_filters.FilterSet):
         return queryset
 
 
-class BorrowedViewset(NestedViewSetMixin, viewsets.ModelViewSet):
+class BorrowedViewset(NestedViewSetMixin, viewsets.ReadOnlyModelViewSet):
+    queryset = models.Borrowed.objects.filter(returned__isnull=True).all()
+    serializer_class = serializers.BorrowedSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+
+class BorrowingsViewset(viewsets.ModelViewSet):
     queryset = models.Borrowed.objects.none()
     serializer_class = serializers.BorrowedSerializer
     permission_classes = [IsAuthenticated, IsOwner]

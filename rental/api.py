@@ -15,5 +15,12 @@ friends.register(
     basename='friend-borrow',
     parents_query_lookups=['to_who'],
 )
+# router = ExtendedDefaultRouter()
+# router.register(r'friends', api_views.FriendViewset).register(
+#     r'borrowings',
+#     api_views.BorrowedViewset,
+#     basename='friend-borrow',
+#     parents_query_lookups=['to_who'],
+# )
 router.register(r'belongings', api_views.BelongingViewset)
-router.register(r'borrowings', api_views.BorrowedViewset)
+router.register(r'borrowings', api_views.BorrowingsViewset)

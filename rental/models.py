@@ -13,15 +13,9 @@ class OwnedModel(models.Model):
 
 class FriendQuerySet(models.QuerySet):
     def with_overdue(self):
-        return self.annotate(
-            ann_overdue=models.Case(
-                models.When(
-                    borrowed__when__lte=datetools.datesub_month(2),
-                    then=True),
-                default=models.Value(False),
-                output_field=models.BooleanField()
-            )
-        )
+        ann_overdue = Borrowed.objects.filter(to_who=models.OuterRef('pk'),
+                                              when__lte=datetools.datesub_month(2))
+        return self.annotate(ann_overdue=models.Exists(ann_overdue))
 
 
 class Friend(OwnedModel):
@@ -43,16 +37,9 @@ class Friend(OwnedModel):
 
 class BelongingQuerySet(models.QuerySet):
     def with_borrowed(self):
-        return self.annotate(
-            ann_borrowed=models.Case(
-                models.When(
-                    borrowed__returned__isnull=True,
-                    borrowed__to_who__isnull=False,
-                    then=True),
-                default=models.Value(False),
-                output_field=models.BooleanField()
-            )
-        )
+        has_borrowed = Borrowed.objects.filter(what=models.OuterRef('pk'),
+                                               to_who__isnull=False, returned__isnull=True)
+        return self.annotate(ann_borrowed=models.Exists(has_borrowed))
 
 
 class Belonging(OwnedModel):
@@ -73,7 +60,7 @@ class Belonging(OwnedModel):
 
 class BorrowedQuerySet(models.QuerySet):
     def overdue(self):
-        return self.filter(when__lte=datetools.datesub_month(2))
+        return self.filter(when__lte=datetools.datesub_month(2), returned__isnull=True)
 
 
 class Borrowed(OwnedModel):
