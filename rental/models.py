@@ -14,7 +14,8 @@ class OwnedModel(models.Model):
 class FriendQuerySet(models.QuerySet):
     def with_overdue(self):
         ann_overdue = Borrowed.objects.filter(to_who=models.OuterRef('pk'),
-                                              when__lte=datetools.datesub_month(2))
+                                              when__lte=datetools.datesub_month(2),
+                                              returned__isnull=True)
         return self.annotate(ann_overdue=models.Exists(ann_overdue))
 
 
