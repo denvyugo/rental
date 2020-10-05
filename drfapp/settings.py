@@ -31,6 +31,7 @@ def get_env_config():
         config['DEBUG'] = ''
     return config
 
+
 env_config = get_env_config()
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY', env_config['SECRET_KEY'])
@@ -38,8 +39,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', env_config['SECRET_KEY'])
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get('DEBUG', env_config['DEBUG']))
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
